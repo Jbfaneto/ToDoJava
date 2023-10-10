@@ -1,5 +1,6 @@
 package com.joaoneto.todosimple.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -33,6 +35,7 @@ public class User implements Serializable {
     @Setter
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password", length = 50, nullable = false)
     @NotNull(groups = {UpdateUser.class, CreateUser.class})
     @NotEmpty(groups = {UpdateUser.class, CreateUser.class})
@@ -41,7 +44,10 @@ public class User implements Serializable {
     @Setter
     private String password;
 
-    //private List<Task> tasks = new ArrayList<>();
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Task> tasks = new ArrayList<>();
 
     public User() {
     }
