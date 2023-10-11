@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import com.joaoneto.todosimple.services.CreateUser;
-import com.joaoneto.todosimple.services.UpdateUser;
+import com.joaoneto.todosimple.util.CreateUser;
+import com.joaoneto.todosimple.util.UpdateUser;
 import lombok.Getter;
 import lombok.Setter;
 
