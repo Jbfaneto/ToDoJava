@@ -1,7 +1,6 @@
 package com.joaoneto.todosimple.services;
 
 import com.joaoneto.todosimple.models.User;
-import com.joaoneto.todosimple.repositories.TaskRepository;
 import com.joaoneto.todosimple.repositories.UserRepository;
 import com.joaoneto.todosimple.services.exceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
@@ -15,9 +14,6 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private TaskRepository taskRepository;
 
 
     public List<User> findAll() {
@@ -33,7 +29,6 @@ public class UserService {
     public User create(User user) {
         user.setId(null);
         user = this.userRepository.save(user);
-        this.taskRepository.saveAll(user.getTasks());
         return user;
     }
 
