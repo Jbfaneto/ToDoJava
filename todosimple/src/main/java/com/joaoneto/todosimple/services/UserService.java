@@ -2,7 +2,7 @@ package com.joaoneto.todosimple.services;
 
 import com.joaoneto.todosimple.models.User;
 import com.joaoneto.todosimple.repositories.UserRepository;
-import com.joaoneto.todosimple.services.exceptions.UserNotFoundException;
+import com.joaoneto.todosimple.services.exceptions.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class UserService {
 
     public User findById(Long id) {
         Optional<User> user = this.userRepository.findById(id);
-        return user.orElseThrow(() ->  new UserNotFoundException("User not found: " + id));
+        return user.orElseThrow(() -> new ObjectNotFoundException("User not found: " + id));
     }
 
     @Transactional

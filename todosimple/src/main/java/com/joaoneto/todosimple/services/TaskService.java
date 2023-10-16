@@ -3,11 +3,12 @@ package com.joaoneto.todosimple.services;
 import com.joaoneto.todosimple.models.Task;
 import com.joaoneto.todosimple.models.User;
 import com.joaoneto.todosimple.repositories.TaskRepository;
-import com.joaoneto.todosimple.services.exceptions.TaskNotFoundException;
+import com.joaoneto.todosimple.services.exceptions.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,9 +19,17 @@ public class TaskService {
     @Autowired
     private UserService userService;
 
+    public List<Task> findAll(){
+        return this.taskRepository.findAll();
+    }
+
     public Task findById(Long id) {
         Optional<Task> task = this.taskRepository.findById(id);
-        return task.orElseThrow(() -> new TaskNotFoundException("Task not found: " + id));
+        return task.orElseThrow(() -> new ObjectNotFoundException("Task not found: " + id));
+    }
+
+    public List<Task> findByUserId(Long id) {
+        return this.taskRepository.findByUser_Id(id);
     }
 
     @Transactional
