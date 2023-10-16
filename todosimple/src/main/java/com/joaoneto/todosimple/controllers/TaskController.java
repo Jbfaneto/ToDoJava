@@ -2,6 +2,7 @@ package com.joaoneto.todosimple.controllers;
 
 import com.joaoneto.todosimple.models.Task;
 import com.joaoneto.todosimple.services.TaskService;
+import com.joaoneto.todosimple.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private UserService userService;
+
     @RequestMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id){
         Task task = taskService.findById(id);
@@ -33,6 +37,7 @@ public class TaskController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Task>> findByUserId(@PathVariable Long userId) {
+        this.userService.findById(userId); // check if user exists (throws exception if not)
         List<Task> tasks = taskService.findByUserId(userId);
         return ResponseEntity.ok().body(tasks);
     }
