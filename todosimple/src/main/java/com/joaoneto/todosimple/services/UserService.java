@@ -40,7 +40,7 @@ public class UserService {
         return this.userRepository.save(newUser);
     }
 
-    @Transactional
+
     public void delete(Long id) {
         this.findById(id);
         try {
