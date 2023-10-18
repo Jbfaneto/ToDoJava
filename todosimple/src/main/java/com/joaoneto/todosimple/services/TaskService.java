@@ -3,6 +3,7 @@ package com.joaoneto.todosimple.services;
 import com.joaoneto.todosimple.models.Task;
 import com.joaoneto.todosimple.models.User;
 import com.joaoneto.todosimple.repositories.TaskRepository;
+import com.joaoneto.todosimple.services.exceptions.DataBindingViolationException;
 import com.joaoneto.todosimple.services.exceptions.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class TaskService {
         try {
             this.taskRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Error deleting task: " + e.getMessage());
+            throw new DataBindingViolationException("Error deleting task: " + e.getMessage());
         }
     }
 }

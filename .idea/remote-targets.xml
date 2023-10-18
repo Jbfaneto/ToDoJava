@@ -11,6 +11,11 @@
             <option name="homePath" value="/usr/lib/jvm/jdk-21-oracle-x64" />
           </config>
         </ContributedStateBase>
+        <ContributedStateBase type="MavenRuntime">
+          <config>
+            <option name="homePath" value="/usr/share/maven/bin/mvn" />
+          </config>
+        </ContributedStateBase>
       </target>
     </targets>
   </component>

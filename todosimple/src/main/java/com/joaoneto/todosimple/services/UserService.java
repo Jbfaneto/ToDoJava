@@ -2,6 +2,7 @@ package com.joaoneto.todosimple.services;
 
 import com.joaoneto.todosimple.models.User;
 import com.joaoneto.todosimple.repositories.UserRepository;
+import com.joaoneto.todosimple.services.exceptions.DataBindingViolationException;
 import com.joaoneto.todosimple.services.exceptions.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class UserService {
         try {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Error deleting user: " + e.getMessage());
+            throw new DataBindingViolationException("Error deleting user: " + e.getMessage());
         }
     }
 
