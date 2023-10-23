@@ -47,6 +47,13 @@ public class JWTUtil {
         return false;
     }
 
+    public String getUsername(String token){
+        Claims claims = this.getClaims(token);
+        if(Objects.nonNull(claims))
+            return claims.getSubject();
+        return null;
+    }
+
     private Claims getClaims(String token){
         SecretKey key = this.getKeyBySecret();
         try{
