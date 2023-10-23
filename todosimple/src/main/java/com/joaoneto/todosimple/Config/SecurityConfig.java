@@ -36,8 +36,11 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-                        .requestMatchers(PUBLIC_MATCHERS).permitAll()
+                        .requestMatchers(request -> {
+                            String method = request.getMethod();
+                            String path = request.getServletPath();
+                            return HttpMethod.POST.matches(method) || Arrays.stream(PUBLIC_MATCHERS).anyMatch(path::equals);
+                        }).permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();

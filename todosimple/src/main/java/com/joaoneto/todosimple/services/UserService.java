@@ -1,18 +1,24 @@
 package com.joaoneto.todosimple.services;
 
 import com.joaoneto.todosimple.models.User;
+import com.joaoneto.todosimple.models.enums.ProfileEnum;
 import com.joaoneto.todosimple.repositories.UserRepository;
 import com.joaoneto.todosimple.services.exceptions.DataBindingViolationException;
 import com.joaoneto.todosimple.services.exceptions.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserService {
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private UserRepository userRepository;
 
@@ -29,6 +35,9 @@ public class UserService {
     @Transactional
     public User create(User user) {
         user.setId(null);
+        user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setProfiles(Stream.of(ProfileEnum.USER.getCode()).collect(Collectors.toSet()));
+        System.out.println(user.getPassword());
         user = this.userRepository.save(user);
         return user;
     }
@@ -37,6 +46,7 @@ public class UserService {
     public User update(User user) {
         User newUser = this.findById(user.getId());
         newUser.setPassword(user.getPassword());
+        newUser.setPassword(this.bCryptPasswordEncoder.encode(newUser.getPassword()));
         return this.userRepository.save(newUser);
     }
 
