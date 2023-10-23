@@ -1,7 +1,7 @@
 package com.joaoneto.todosimple.Config;
 
+import com.joaoneto.todosimple.security.JWTAuthenticationFilter;
 import com.joaoneto.todosimple.security.JWTUtil;
-import com.joaoneto.todosimple.services.UserDetailsServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +43,7 @@ public class SecurityConfig {
             "/login"
     };
 
-   @Bean
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable());
 
@@ -52,8 +52,6 @@ public class SecurityConfig {
                        .passwordEncoder(bCryptPasswordEncoder());
        this.authenticationManager = authenticationManagerBuilder.build();
 
-        http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
         http
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers(request -> {
@@ -61,8 +59,12 @@ public class SecurityConfig {
                             String path = request.getServletPath();
                             return HttpMethod.POST.matches(method) || Arrays.stream(PUBLIC_MATCHERS).anyMatch(path::equals);
                         }).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated().and()
+                        .authenticationManager(this.authenticationManager)
                 );
+        http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+        http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
         return http.build();
     }
 
