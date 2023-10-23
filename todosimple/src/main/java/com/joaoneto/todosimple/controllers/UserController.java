@@ -21,11 +21,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<User>> findAllUsers() {
-        List<User> users = this.userService.findAll();
-        return ResponseEntity.ok(users);
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable Long id) {

@@ -3,14 +3,18 @@ package com.joaoneto.todosimple.services;
 import com.joaoneto.todosimple.models.User;
 import com.joaoneto.todosimple.models.enums.ProfileEnum;
 import com.joaoneto.todosimple.repositories.UserRepository;
+import com.joaoneto.todosimple.security.UserSpringSecurity;
+import com.joaoneto.todosimple.services.exceptions.AuthorizationException;
 import com.joaoneto.todosimple.services.exceptions.DataBindingViolationException;
 import com.joaoneto.todosimple.services.exceptions.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,12 +26,11 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-
-    public List<User> findAll() {
-        return this.userRepository.findAll();
-    }
-
     public User findById(Long id) {
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        if (!Objects.nonNull(userSpringSecurity) || !userSpringSecurity.hasRole(ProfileEnum.ADMIN) && !id.equals(userSpringSecurity.getId())) {
+            throw new AuthorizationException("Access denied");
+        }
         Optional<User> user = this.userRepository.findById(id);
         return user.orElseThrow(() -> new ObjectNotFoundException("User not found: " + id));
     }
@@ -37,7 +40,6 @@ public class UserService {
         user.setId(null);
         user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
         user.setProfiles(Stream.of(ProfileEnum.USER.getCode()).collect(Collectors.toSet()));
-        System.out.println(user.getPassword());
         user = this.userRepository.save(user);
         return user;
     }
@@ -60,5 +62,11 @@ public class UserService {
         }
     }
 
-
+    public static UserSpringSecurity authenticated(){
+        try {
+            return (UserSpringSecurity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (Exception e){
+            return null;
+        }
+    }
 }
