@@ -1,21 +1,19 @@
 package com.joaoneto.todosimple.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Objects;
+
 
 @Entity
 @Table(name = "task")
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@Getter
-@Setter
+@Data
 public class Task implements Serializable{
     private static final long serialVersionUID = 1L;
     @Id
@@ -28,8 +26,7 @@ public class Task implements Serializable{
     private User user;
 
     @Column(name="description", length = 255, nullable = false)
-    @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(min = 4, max = 255)
     private String description;
 

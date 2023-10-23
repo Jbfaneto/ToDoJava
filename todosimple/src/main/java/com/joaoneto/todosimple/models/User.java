@@ -4,11 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.joaoneto.todosimple.models.enums.ProfileEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import com.joaoneto.todosimple.util.CreateUser;
-import com.joaoneto.todosimple.util.UpdateUser;
 import lombok.*;
 
 import java.io.Serializable;
@@ -22,9 +18,7 @@ import java.util.stream.Collectors;
 @Table (name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@Setter
+@Data
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -34,15 +28,13 @@ public class User implements Serializable {
     private Long id;
 
     @Column(name = "username", length = 100, unique = true, nullable = false)
-    @NotNull(groups = UpdateUser.class)
-    @NotEmpty(groups = UpdateUser.class)
+    @NotBlank
     @Size(min = 4, max = 50)
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password", length = 255, nullable = false)
-    @NotNull(groups = {UpdateUser.class, CreateUser.class})
-    @NotEmpty(groups = {UpdateUser.class, CreateUser.class})
+    @NotBlank
     @Size(min = 1, max = 255)
     private String password;
 

@@ -1,6 +1,8 @@
 package com.joaoneto.todosimple.services;
 
 import com.joaoneto.todosimple.models.User;
+import com.joaoneto.todosimple.models.dto.UserCreateDTO;
+import com.joaoneto.todosimple.models.dto.UserUpdateDTO;
 import com.joaoneto.todosimple.models.enums.ProfileEnum;
 import com.joaoneto.todosimple.repositories.UserRepository;
 import com.joaoneto.todosimple.security.UserSpringSecurity;
@@ -8,6 +10,7 @@ import com.joaoneto.todosimple.services.exceptions.AuthorizationException;
 import com.joaoneto.todosimple.services.exceptions.DataBindingViolationException;
 import com.joaoneto.todosimple.services.exceptions.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -68,5 +71,19 @@ public class UserService {
         } catch (Exception e){
             return null;
         }
+    }
+
+    public User fromDTO(@Valid UserCreateDTO obj) {
+        User user = new User();
+        user.setUsername(obj.getUsername());
+        user.setPassword(obj.getPassword());
+        return user;
+    }
+
+    public User fromDTO(@Valid UserUpdateDTO obj) {
+        User user = new User();
+        user.setId(obj.getId());
+        user.setPassword(obj.getPassword());
+        return user;
     }
 }

@@ -1,9 +1,9 @@
 package com.joaoneto.todosimple.controllers;
 
 import com.joaoneto.todosimple.models.User;
+import com.joaoneto.todosimple.models.dto.UserCreateDTO;
+import com.joaoneto.todosimple.models.dto.UserUpdateDTO;
 import com.joaoneto.todosimple.services.UserService;
-import com.joaoneto.todosimple.util.CreateUser;
-import com.joaoneto.todosimple.util.UpdateUser;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/users")
@@ -29,18 +29,19 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    @Validated(CreateUser.class)
-    public ResponseEntity<Void> createUser(@Valid @RequestBody User user) {
-        user = this.userService.create(user);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+    public ResponseEntity<Void> create(@Valid @RequestBody UserCreateDTO obj) {
+        User user = this.userService.fromDTO(obj);
+        User newUser = this.userService.create(user);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(newUser.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{id}")
-    @Validated(UpdateUser.class)
-    public ResponseEntity<Void> updateUser(@Valid @RequestBody User user, @PathVariable Long id) {
-        user.setId(id);
-        user = this.userService.update(user);
+    public ResponseEntity<Void> update(@Valid @RequestBody UserUpdateDTO obj, @PathVariable Long id) {
+        obj.setId(id);
+        User user = this.userService.fromDTO(obj);
+        this.userService.update(user);
         return ResponseEntity.noContent().build();
     }
 

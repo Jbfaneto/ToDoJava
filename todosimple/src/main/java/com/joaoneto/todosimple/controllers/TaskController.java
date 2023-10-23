@@ -1,6 +1,7 @@
 package com.joaoneto.todosimple.controllers;
 
 import com.joaoneto.todosimple.models.Task;
+import com.joaoneto.todosimple.models.projections.TaskProjection;
 import com.joaoneto.todosimple.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class TaskController {
 
 
     @GetMapping("/user")
-    public ResponseEntity<List<Task>> findByUser() {
-        List<Task> tasks = taskService.findByUser();
+    public ResponseEntity<List<TaskProjection>> findByUser() {
+        List<TaskProjection> tasks = taskService.findByUser();
         return ResponseEntity.ok().body(tasks);
     }
 
